@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LCC Hari Pahlawan - SMP Negeri 1 Semanu</title>
+  <!-- Pustaka SheetJS untuk Ekspor Excel (.xlsx) -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --primary: #1e3a8a;
@@ -295,7 +297,7 @@
           <select id="filterRekapTahap" onchange="renderLeaderboard()"></select>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn btn-success btn-sm" onclick="exportCSV()">📥 Ekspor CSV / Excel</button>
+          <button class="btn btn-success btn-sm" onclick="exportExcel()">📥 Ekspor Excel (.xlsx)</button>
           <button class="btn btn-danger btn-sm" onclick="clearLeaderboard()">🗑️ Reset Rekap Nilai</button>
         </div>
       </div>
@@ -418,8 +420,8 @@
     </svg>
   `);
 
-  const STAGE_1 = "Tahap 1 Babak Penyisihan";
-  const STAGE_2 = "Tahap 2 Semi Final";
+  const STAGE_1 = "Tahap 1 Babak Penyisihan 18 Kelas";
+  const STAGE_2 = "Tahap 2 Babak SemiFinal";
 
   const DEFAULT_QUESTIONS = [
     { category: STAGE_1, question: "Hari Pahlawan diperingati setiap tanggal ....", options: ["17 Agustus", "10 November", "20 Mei", "28 Oktober"], answer: 1 },
@@ -485,7 +487,7 @@
     schoolName: "SMP NEGERI 1 SEMANU",
     quizTitle: "Lomba Cerdas Cermat dalam Rangka Memperingati Hari Pahlawan",
     logo: DEFAULT_LOGO,
-    adminPin: "Ari1981#*#"
+    adminPin: "1234"
   };
 
   let activeQuiz = {
@@ -750,18 +752,42 @@
     renderLeaderboard();
   }
 
-  function exportCSV() {
+  function exportExcel() {
     if (leaderboard.length === 0) return alert("Belum ada data untuk diekspor.");
     const sorted = [...leaderboard].sort((a, b) => b.skor - a.skor || b.benar - a.benar);
-    let csv = "Peringkat,Kelas,Nama Regu,Tahap,Benar,Total Soal,Skor\n";
-    sorted.forEach((r, i) => {
-      csv += `${i + 1},"${r.kelas}","${r.namaRegu}","${r.tahap}",${r.benar},${r.total},${r.skor}\n`;
+    
+    const excelData = sorted.map((r, i) => {
+      let status = "Peserta";
+      if (r.tahap.includes("Tahap 1")) {
+        status = (i + 1) <= 9 ? "LOLOS TAHAP 2 (9 BESAR)" : "Gugur Penyisihan";
+      } else if (r.tahap.includes("Tahap 2")) {
+        if (i === 0) status = "JUARA 1";
+        else if (i === 1) status = "JUARA 2";
+        else if (i === 2) status = "JUARA 3";
+        else status = "Finalis";
+      }
+
+      return {
+        "Peringkat": i + 1,
+        "Kelas": r.kelas,
+        "Nama Regu": r.namaRegu,
+        "Tahap": r.tahap,
+        "Jawaban Benar": r.benar,
+        "Total Soal": r.total,
+        "Skor Akhir": r.skor,
+        "Status": status
+      };
     });
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "Rekap_LCC_Hari_Pahlawan_SMPN1Semanu.csv";
-    a.click();
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    worksheet["!cols"] = [
+      { wch: 10 }, { wch: 10 }, { wch: 25 }, { wch: 32 },
+      { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 24 }
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Nilai LCC");
+    XLSX.writeFile(workbook, "Rekap_LCC_Hari_Pahlawan_SMPN1Semanu.xlsx");
   }
 
   function renderQuestionList() {
