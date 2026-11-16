@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LCC Hari Pahlawan - SMP Negeri 1 Semanu</title>
+  <title>LCC Hari Pahlawan - SMP Negeri 2 Purwosari</title>
   <!-- Pustaka SheetJS untuk Ekspor Excel (.xlsx) -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
   <style>
@@ -185,9 +185,9 @@
 
 <header>
   <div class="header-inner">
-    <img id="schoolLogoDisplay" class="school-logo" alt="Logo SMPN 1 Semanu" />
+    <img id="schoolLogoDisplay" class="school-logo" alt="Logo SMPN 2 Purwosari" />
     <div>
-      <h1 id="schoolNameDisplay">SMP NEGERI 1 SEMANU</h1>
+      <h1 id="schoolNameDisplay">SMP NEGERI 2 PURWOSARI</h1>
       <p id="quizTitleDisplay">Lomba Cerdas Cermat dalam Rangka Memperingati Hari Pahlawan</p>
     </div>
   </div>
@@ -205,20 +205,20 @@
     <p style="color:var(--muted); margin-top:-6px; margin-bottom:16px;">Silakan pilih kelas, tahap perlombaan, dan masukkan password yang diberikan panitia/guru.</p>
 
     <div class="form-group">
-      <label for="inputKelas">Pilih Kelas (18 Kelas)</label>
+      <label for="inputKelas">Pilih Kelas (6 Kelas)</label>
       <select id="inputKelas">
         <option value="">-- Pilih Kelas --</option>
         <optgroup label="Kelas VII">
-          <option value="VII A">VII A</option><option value="VII B">VII B</option><option value="VII C">VII C</option>
-          <option value="VII D">VII D</option><option value="VII E">VII E</option><option value="VII F">VII F</option>
+          <option value="VII A">VII A</option>
+          <option value="VII B">VII B</option>
         </optgroup>
         <optgroup label="Kelas VIII">
-          <option value="VIII A">VIII A</option><option value="VIII B">VIII B</option><option value="VIII C">VIII C</option>
-          <option value="VIII D">VIII D</option><option value="VIII E">VIII E</option><option value="VIII F">VIII F</option>
+          <option value="VIII A">VIII A</option>
+          <option value="VIII B">VIII B</option>
         </optgroup>
         <optgroup label="Kelas IX">
-          <option value="IX A">IX A</option><option value="IX B">IX B</option><option value="IX C">IX C</option>
-          <option value="IX D">IX D</option><option value="IX E">IX E</option><option value="IX F">IX F</option>
+          <option value="IX A">IX A</option>
+          <option value="IX B">IX B</option>
         </optgroup>
       </select>
     </div>
@@ -272,7 +272,7 @@
       <div id="resScore" style="font-size:3rem; font-weight:800; color:var(--primary-light); line-height:1.1; margin:6px 0;">0</div>
       <div id="resDetail" style="font-size:0.92rem; color:var(--text);">Benar: 0 | Salah: 0</div>
     </div>
-    <p style="font-size:0.9rem; color:var(--muted);">Nilai Anda telah tersimpan otomatis ke papan peringkat panitia/guru.</p>
+    <p style="font-size:0.9rem; color:var(--muted);">Nilai Anda telah terkirim otomatis ke server panitia/guru.</p>
     <button class="btn btn-primary" onclick="resetToHome()">Kembali ke Halaman Awal</button>
   </div>
 
@@ -297,8 +297,9 @@
           <select id="filterRekapTahap" onchange="renderLeaderboard()"></select>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="fetchOnlineLeaderboard()">🔄 Tarik Data Online</button>
           <button class="btn btn-success btn-sm" onclick="exportExcel()">📥 Ekspor Excel (.xlsx)</button>
-          <button class="btn btn-danger btn-sm" onclick="clearLeaderboard()">🗑️ Reset Rekap Nilai</button>
+          <button class="btn btn-danger btn-sm" onclick="clearLeaderboard()">🗑️ Reset Rekap</button>
         </div>
       </div>
 
@@ -407,21 +408,24 @@
 </div>
 
 <footer>
-  Aplikasi LCC Hari Pahlawan Powered By @Ari Nopriyani 2026
+  DIBUAT OLEH KUSWORO 2026
 </footer>
 
 <script>
+  // ⚠️ GANTI URL DI BAWAH INI DENGAN URL WEB APP (/exec) ANDA DARI GOOGLE APPS SCRIPT
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwHf8LJIKe6XhO7Wz4UKpVG1g66QxWIle0vxfrTMLJW-gAlrsjdfqLK4g0qf5zqf9L8dw/exec";
+
   const DEFAULT_LOGO = "data:image/svg+xml;utf8," + encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
       <path d="M60 6 L108 24 V62 C108 90 86 108 60 116 C34 108 12 90 12 62 V24 Z" fill="#1e3a8a" stroke="#d97706" stroke-width="6"/>
       <circle cx="60" cy="54" r="24" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
       <polygon points="60,34 65,48 80,48 68,57 72,71 60,62 48,71 52,57 40,48 55,48" fill="#d97706"/>
-      <text x="60" y="96" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">SMPN 1 SEMANU</text>
+      <text x="60" y="96" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">SMPN 2 PURWOSARI</text>
     </svg>
   `);
 
-  const STAGE_1 = "Tahap 1 Babak Penyisihan 18 Kelas";
-  const STAGE_2 = "Tahap 2 Babak SemiFinal";
+  const STAGE_1 = "PPKn - Tahap 1 (Penyisihan)";
+  const STAGE_2 = "PPKn - Tahap 2 (Babak Final)";
 
   const DEFAULT_QUESTIONS = [
     { category: STAGE_1, question: "Hari Pahlawan diperingati setiap tanggal ....", options: ["17 Agustus", "10 November", "20 Mei", "28 Oktober"], answer: 1 },
@@ -469,524 +473,4 @@
     { category: STAGE_2, question: "Sikap yang menunjukkan nilai patriotisme di lingkungan sekolah adalah ....", options: ["Mengikuti upacara bendera dengan tertib dan khidmat", "Mengejek teman yang berbeda daerah", "Mengabaikan peraturan sekolah", "Tidak peduli terhadap lingkungan sekolah"], answer: 0 },
     { category: STAGE_2, question: "Para pahlawan memiliki keberanian untuk memperjuangkan kemerdekaan meskipun menghadapi risiko besar. Dalam kehidupan pelajar, nilai keberanian tersebut dapat diwujudkan melalui ....", options: ["Berani melanggar aturan demi mendapatkan pujian", "Berani menyampaikan pendapat yang benar dengan santun dan bertanggung jawab", "Berani menentang semua pendapat teman", "Berani melakukan tindakan yang membahayakan orang lain"], answer: 1 },
     { category: STAGE_2, question: "Indonesia memiliki banyak suku, agama, ras, dan budaya. Jika dikaitkan dengan perjuangan para pahlawan yang berasal dari berbagai daerah, kesimpulan yang paling tepat adalah ....", options: ["Kemerdekaan hanya diperjuangkan oleh satu kelompok masyarakat", "Perbedaan merupakan penghalang untuk mencapai kemerdekaan", "Keberagaman dapat menjadi kekuatan apabila disatukan oleh semangat persatuan", "Setiap daerah sebaiknya memperjuangkan kepentingannya sendiri"], answer: 2 },
-    { category: STAGE_2, question: "Seorang siswa melihat temannya melakukan perundungan terhadap siswa lain. Jika menerapkan nilai kepahlawanan, tindakan terbaik adalah ....", options: ["Membiarkan karena bukan urusannya", "Ikut mengejek agar diterima kelompok", "Membela korban dengan cara yang aman dan melaporkan kepada guru", "Merekam kejadian untuk dijadikan hiburan"], answer: 2 },
-    { category: STAGE_2, question: "Perhatikan ilustrasi berikut!\nDalam sebuah perlombaan antarkelas, tim kelas VIII mengalami kekalahan. Beberapa anggota tim saling menyalahkan sehingga suasana menjadi tidak nyaman.\nSikap yang paling sesuai dengan semangat perjuangan para pahlawan adalah ....", options: ["Meninggalkan kelompok karena merasa kecewa", "Mencari siapa yang paling bertanggung jawab atas kekalahan", "Melakukan evaluasi bersama dan memperbaiki kekurangan untuk perjuangan berikutnya", "Menolak mengikuti perlombaan selanjutnya"], answer: 2 },
-    { category: STAGE_2, question: "Pada masa penjajahan, para pahlawan menggunakan berbagai cara untuk melawan ketidakadilan. Pada masa sekarang, seorang pelajar menemukan praktik ketidakadilan di lingkungan sekolah. Tindakan yang paling tepat adalah ....", options: ["Melakukan tindakan balas dendam", "Menyampaikan fakta dan mencari penyelesaian melalui cara yang benar", "Menyebarkan informasi tanpa bukti", "Mengajak teman melakukan kekerasan"], answer: 1 },
-    { category: STAGE_2, question: "Perhatikan beberapa tindakan berikut!\n1. Menggunakan produk dalam negeri.\n2. Menghargai budaya daerah lain.\n3. Menyebarkan berita bohong tentang bangsa sendiri.\n4. Belajar untuk mengembangkan ilmu pengetahuan.\n5. Menganggap budaya sendiri paling unggul dan merendahkan budaya lain.\nTindakan yang mencerminkan nasionalisme secara positif adalah ....", options: ["1, 2, dan 4", "1, 3, dan 5", "2, 3, dan 4", "3, 4, dan 5"], answer: 0 },
-    { category: STAGE_2, question: "Kemerdekaan Indonesia diperoleh melalui perjuangan panjang dan pengorbanan para pahlawan. Apabila generasi muda tidak menghargai sejarah perjuangan bangsa, dampak yang paling mungkin terjadi adalah ....", options: ["Semangat nasionalisme semakin kuat", "Generasi muda kehilangan pemahaman tentang identitas dan jati diri bangsa", "Persatuan bangsa semakin kokoh", "Kesadaran berbangsa semakin meningkat"], answer: 1 },
-    { category: STAGE_2, question: "Sekelompok siswa akan membuat kegiatan peringatan Hari Pahlawan. Mereka memiliki dua pilihan kegiatan:\nKegiatan I: Mengadakan lomba menyanyikan lagu perjuangan saja.\nKegiatan II: Mengadakan lomba lagu perjuangan sekaligus aksi sosial membantu masyarakat sekitar.\nJika tujuan kegiatan adalah meneladani nilai perjuangan pahlawan secara nyata, pilihan yang paling tepat adalah ....", options: ["Kegiatan I, karena hanya membutuhkan waktu singkat", "Kegiatan II, karena menggabungkan penghargaan sejarah dengan tindakan nyata kepedulian sosial", "Kedua kegiatan tidak perlu dilaksanakan", "Kegiatan I, karena kegiatan sosial bukan bagian dari semangat kepahlawanan"], answer: 1 }
-  ];
-
-  let questions = JSON.parse(localStorage.getItem("lcc_semanu_questions_v2")) || JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
-  let stagePasswords = JSON.parse(localStorage.getItem("lcc_semanu_stage_pass_v2")) || {
-    [STAGE_1]: "PAHLAWAN1",
-    [STAGE_2]: "MERDEKA2"
-  };
-  let leaderboard = JSON.parse(localStorage.getItem("lcc_semanu_scores_v2")) || [];
-  let settings = JSON.parse(localStorage.getItem("lcc_semanu_settings_v2")) || {
-    schoolName: "SMP NEGERI 1 SEMANU",
-    quizTitle: "Lomba Cerdas Cermat dalam Rangka Memperingati Hari Pahlawan",
-    logo: DEFAULT_LOGO,
-    adminPin: "1234"
-  };
-
-  let activeQuiz = {
-    kelas: "",
-    namaRegu: "",
-    tahap: "",
-    items: [],
-    answers: [],
-    currentIndex: 0
-  };
-
-  function saveAllState() {
-    localStorage.setItem("lcc_semanu_questions_v2", JSON.stringify(questions));
-    localStorage.setItem("lcc_semanu_stage_pass_v2", JSON.stringify(stagePasswords));
-    localStorage.setItem("lcc_semanu_scores_v2", JSON.stringify(leaderboard));
-    localStorage.setItem("lcc_semanu_settings_v2", JSON.stringify(settings));
-  }
-
-  function applyBranding() {
-    document.getElementById("schoolNameDisplay").textContent = settings.schoolName;
-    document.getElementById("quizTitleDisplay").textContent = settings.quizTitle;
-    document.getElementById("schoolLogoDisplay").src = settings.logo || DEFAULT_LOGO;
-  }
-
-  function getCategories() {
-    const cats = [...new Set(questions.map(q => q.category))];
-    return cats.length ? cats : [STAGE_1, STAGE_2];
-  }
-
-  function populateCategoryDropdowns() {
-    const cats = getCategories();
-    const selTahap = document.getElementById("selectTahap");
-    const selRekap = document.getElementById("filterRekapTahap");
-    const selBank = document.getElementById("filterBankSoal");
-
-    selTahap.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join("");
-    selRekap.innerHTML = `<option value="ALL">Semua Tahap</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join("");
-    selBank.innerHTML = `<option value="ALL">Semua Kategori (${questions.length} soal)</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join("");
-    document.getElementById("countSoalBadge").textContent = questions.length;
-    checkStagePasswordUI();
-  }
-
-  function checkStagePasswordUI() {
-    const selected = document.getElementById("selectTahap").value;
-    const reqPass = stagePasswords[selected];
-    const passGroup = document.getElementById("stagePassGroup");
-    if (reqPass && reqPass.trim() !== "") {
-      passGroup.classList.remove("hidden");
-    } else {
-      passGroup.classList.add("hidden");
-    }
-  }
-
-  function startQuiz() {
-    const kelas = document.getElementById("inputKelas").value;
-    const namaRegu = document.getElementById("inputNamaRegu").value.trim() || `Regu ${kelas}`;
-    const tahap = document.getElementById("selectTahap").value;
-    const inputPass = document.getElementById("inputStagePass").value.trim();
-
-    if (!kelas) return alert("Silakan pilih Kelas terlebih dahulu!");
-    const reqPass = stagePasswords[tahap];
-    if (reqPass && reqPass.trim() !== "" && inputPass !== reqPass.trim()) {
-      return alert("Password Akses Tahap salah! Silakan minta password kepada guru/panitia.");
-    }
-
-    const filtered = questions.filter(q => q.category === tahap);
-    if (filtered.length === 0) return alert("Belum ada soal pada tahap ini.");
-
-    activeQuiz = {
-      kelas,
-      namaRegu,
-      tahap,
-      items: filtered,
-      answers: new Array(filtered.length).fill(null),
-      currentIndex: 0
-    };
-
-    document.getElementById("viewStudentStart").classList.add("hidden");
-    document.getElementById("viewQuiz").classList.remove("hidden");
-    document.getElementById("quizInfoKelas").textContent = `Kelas ${kelas}`;
-    document.getElementById("quizInfoTahap").textContent = tahap;
-    document.getElementById("qTotalNum").textContent = filtered.length;
-    renderQuestion();
-  }
-
-  function renderQuestion() {
-    const idx = activeQuiz.currentIndex;
-    const item = activeQuiz.items[idx];
-    document.getElementById("qCurrentNum").textContent = idx + 1;
-    document.getElementById("questionText").innerText = `${idx + 1}. ${item.question}`;
-
-    const letters = ["A", "B", "C", "D"];
-    const container = document.getElementById("optionsContainer");
-    container.innerHTML = item.options.map((opt, i) => `
-      <button class="option-btn ${activeQuiz.answers[idx] === i ? 'selected' : ''}" onclick="selectOption(${i})">
-        <span class="opt-letter">${letters[i]}</span>
-        <span>${opt}</span>
-      </button>
-    `).join("");
-
-    document.getElementById("btnPrevQ").disabled = idx === 0;
-    if (idx === activeQuiz.items.length - 1) {
-      document.getElementById("btnNextQ").classList.add("hidden");
-      document.getElementById("btnFinishQ").classList.remove("hidden");
-    } else {
-      document.getElementById("btnNextQ").classList.remove("hidden");
-      document.getElementById("btnFinishQ").classList.add("hidden");
-    }
-  }
-
-  function selectOption(optIdx) {
-    activeQuiz.answers[activeQuiz.currentIndex] = optIdx;
-    renderQuestion();
-  }
-
-  function prevQuestion() {
-    if (activeQuiz.currentIndex > 0) {
-      activeQuiz.currentIndex--;
-      renderQuestion();
-    }
-  }
-
-  function nextQuestion() {
-    if (activeQuiz.currentIndex < activeQuiz.items.length - 1) {
-      activeQuiz.currentIndex++;
-      renderQuestion();
-    }
-  }
-
-    function finishQuiz() {
-    const unanswered = activeQuiz.answers.filter(a => a === null).length;
-    if (unanswered > 0 && !confirm(`Masih ada ${unanswered} soal belum dijawab. Yakin ingin mengirim jawaban?`)) return;
-
-    let correct = 0;
-    activeQuiz.items.forEach((q, idx) => {
-      if (activeQuiz.answers[idx] === q.answer) correct++;
-    });
-
-    const total = activeQuiz.items.length;
-    const score = Math.round((correct / total) * 100);
-
-    const resultData = {
-      kelas: activeQuiz.kelas,
-      namaRegu: activeQuiz.namaRegu,
-      tahap: activeQuiz.tahap,
-      benar: correct,
-      total: total,
-      skor: score
-    };
-
-    // KIRIM OTOMATIS KE GOOGLE SHEETS
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwAcO_YFf5bd1N_Z0ajz7HCtit3C5mtDCRfZPurUVRmK0ac3ENNIT53-QcokkjAzt_ROw/exec"; // Tempel URL /exec di sini
-    fetch(WEB_APP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(resultData)
-    }).catch(err => console.log("Gagal kirim ke sheets", err));
-
-    // Simpan lokal juga sebagai cadangan
-    leaderboard.push({ id: Date.now(), ...resultData, waktu: new Date().toLocaleTimeString("id-ID") });
-    saveAllState();
-
-    document.getElementById("viewQuiz").classList.add("hidden");
-    document.getElementById("viewResult").classList.remove("hidden");
-    document.getElementById("resReguInfo").textContent = `Kelas ${activeQuiz.kelas} (${activeQuiz.namaRegu}) — ${activeQuiz.tahap}`;
-    document.getElementById("resScore").textContent = score;
-    document.getElementById("resDetail").textContent = `Benar: ${correct} dari ${total} soal | Salah: ${total - correct}`;
-  }
-  
-  function resetToHome() {
-    document.getElementById("viewResult").classList.add("hidden");
-    document.getElementById("viewStudentStart").classList.remove("hidden");
-    document.getElementById("inputStagePass").value = "";
-  }
-
-  function openAdminLogin() {
-    const pin = prompt("Masukkan PIN Mode Guru / Panitia:");
-    if (pin === null) return;
-    if (pin === settings.adminPin) {
-      switchView("admin");
-    } else {
-      alert("PIN salah!");
-    }
-  }
-
-  function switchView(view) {
-    ["viewStudentStart", "viewQuiz", "viewResult", "viewAdmin"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    if (view === "admin") {
-      document.getElementById("viewAdmin").classList.remove("hidden");
-      document.getElementById("btnModeGuru").classList.add("hidden");
-      document.getElementById("btnModeSiswa").classList.remove("hidden");
-      populateCategoryDropdowns();
-      renderLeaderboard();
-      renderQuestionList();
-      loadSettingsForm();
-    } else {
-      document.getElementById("viewStudentStart").classList.remove("hidden");
-      document.getElementById("btnModeGuru").classList.remove("hidden");
-      document.getElementById("btnModeSiswa").classList.add("hidden");
-      populateCategoryDropdowns();
-    }
-  }
-
-  function switchAdminTab(tab) {
-    ["adminTabRekap", "adminTabSoal", "adminTabSandi"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    ["tabBtnRekap", "tabBtnSoal", "tabBtnSandi"].forEach(id => document.getElementById(id).classList.remove("active"));
-    if (tab === "rekap") {
-      document.getElementById("adminTabRekap").classList.remove("hidden");
-      document.getElementById("tabBtnRekap").classList.add("active");
-      renderLeaderboard();
-    } else if (tab === "soal") {
-      document.getElementById("adminTabSoal").classList.remove("hidden");
-      document.getElementById("tabBtnSoal").classList.add("active");
-      renderQuestionList();
-    } else {
-      document.getElementById("adminTabSandi").classList.remove("hidden");
-      document.getElementById("tabBtnSandi").classList.add("active");
-      loadSettingsForm();
-    }
-  }
-
-  function renderLeaderboard() {
-    const filter = document.getElementById("filterRekapTahap").value;
-    let filtered = filter === "ALL" ? [...leaderboard] : leaderboard.filter(item => item.tahap === filter);
-    filtered.sort((a, b) => b.skor - a.skor || b.benar - a.benar || a.id - b.id);
-
-    const tbody = document.getElementById("leaderboardBody");
-    if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:20px;">Belum ada data nilai masuk.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = filtered.map((row, idx) => {
-      const rank = idx + 1;
-      let statusBadge = `<span class="badge badge-blue">Peserta</span>`;
-      if (row.tahap.includes("Tahap 1")) {
-        statusBadge = rank <= 9
-          ? `<span class="badge badge-green">✔ LOLOS TAHAP 2 (9 BESAR)</span>`
-          : `<span class="badge badge-red">Gugur Penyisihan</span>`;
-      } else if (row.tahap.includes("Tahap 2")) {
-        if (rank === 1) statusBadge = `<span class="badge badge-gold">🥇 JUARA 1</span>`;
-        else if (rank === 2) statusBadge = `<span class="badge badge-gold">🥈 JUARA 2</span>`;
-        else if (rank === 3) statusBadge = `<span class="badge badge-gold">🥉 JUARA 3</span>`;
-        else statusBadge = `<span class="badge badge-blue">Finalis</span>`;
-      }
-      return `
-        <tr>
-          <td><strong>#${rank}</strong></td>
-          <td><strong>${row.kelas}</strong></td>
-          <td>${row.namaRegu}<br><small style="color:var(--muted);">${row.tahap}</small></td>
-          <td>${row.benar}/${row.total}</td>
-          <td><strong style="font-size:1.05rem; color:var(--primary);">${row.skor}</strong></td>
-          <td>${statusBadge}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteScore(${row.id})">Hapus</button></td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  function deleteScore(id) {
-    if (!confirm("Hapus data nilai regu ini?")) return;
-    leaderboard = leaderboard.filter(item => item.id !== id);
-    saveAllState();
-    renderLeaderboard();
-  }
-
-  function clearLeaderboard() {
-    if (!confirm("Yakin ingin mereset/menghapus seluruh rekap nilai?")) return;
-    leaderboard = [];
-    saveAllState();
-    renderLeaderboard();
-  }
-
-  function exportExcel() {
-    if (leaderboard.length === 0) return alert("Belum ada data untuk diekspor.");
-    const sorted = [...leaderboard].sort((a, b) => b.skor - a.skor || b.benar - a.benar);
-    
-    const excelData = sorted.map((r, i) => {
-      let status = "Peserta";
-      if (r.tahap.includes("Tahap 1")) {
-        status = (i + 1) <= 9 ? "LOLOS TAHAP 2 (9 BESAR)" : "Gugur Penyisihan";
-      } else if (r.tahap.includes("Tahap 2")) {
-        if (i === 0) status = "JUARA 1";
-        else if (i === 1) status = "JUARA 2";
-        else if (i === 2) status = "JUARA 3";
-        else status = "Finalis";
-      }
-
-      return {
-        "Peringkat": i + 1,
-        "Kelas": r.kelas,
-        "Nama Regu": r.namaRegu,
-        "Tahap": r.tahap,
-        "Jawaban Benar": r.benar,
-        "Total Soal": r.total,
-        "Skor Akhir": r.skor,
-        "Status": status
-      };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
-    worksheet["!cols"] = [
-      { wch: 10 }, { wch: 10 }, { wch: 25 }, { wch: 32 },
-      { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 24 }
-    ];
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Nilai LCC");
-    XLSX.writeFile(workbook, "Rekap_LCC_Hari_Pahlawan_SMPN1Semanu.xlsx");
-  }
-
-  function renderQuestionList() {
-    const filter = document.getElementById("filterBankSoal").value;
-    const container = document.getElementById("questionListContainer");
-    const letters = ["A", "B", "C", "D"];
-
-    const listWithIndex = questions.map((q, idx) => ({ ...q, origIdx: idx }))
-      .filter(q => filter === "ALL" || q.category === filter);
-
-    if (listWithIndex.length === 0) {
-      container.innerHTML = `<p style="text-align:center; color:var(--muted); padding:20px;">Bank soal kosong. Silakan tambah soal baru atau pulihkan soal bawaan.</p>`;
-      return;
-    }
-
-    container.innerHTML = listWithIndex.map((q, i) => `
-      <div class="q-item">
-        <div class="q-item-header">
-          <div>
-            <span class="badge badge-blue">${q.category}</span>
-            <strong style="display:block; margin-top:6px;">${i + 1}. ${q.question}</strong>
-          </div>
-          <div style="display:flex; gap:6px; flex-shrink:0;">
-            <button class="btn btn-outline btn-sm" onclick="editQuestion(${q.origIdx})">Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${q.origIdx})">Hapus</button>
-          </div>
-        </div>
-        <div style="font-size:0.9rem; color:var(--muted); margin-top:6px;">
-          ${q.options.map((opt, oi) => `<span style="margin-right:12px; ${oi === q.answer ? 'color:var(--success); font-weight:700;' : ''}">${letters[oi]}. ${opt}</span>`).join("")}
-        </div>
-      </div>
-    `).join("");
-  }
-
-  function saveQuestion() {
-    const editIdx = parseInt(document.getElementById("editSoalIndex").value);
-    const category = document.getElementById("soalCategory").value.trim();
-    const question = document.getElementById("soalQuestion").value.trim();
-    const options = [
-      document.getElementById("optA").value.trim(),
-      document.getElementById("optB").value.trim(),
-      document.getElementById("optC").value.trim(),
-      document.getElementById("optD").value.trim()
-    ];
-    const answer = parseInt(document.getElementById("soalAnswer").value);
-
-    if (!category || !question || options.some(o => !o)) {
-      return alert("Harap lengkapi kategori, pertanyaan, dan keempat pilihan jawaban!");
-    }
-
-    const payload = { category, question, options, answer };
-    if (editIdx >= 0) {
-      questions[editIdx] = payload;
-    } else {
-      questions.push(payload);
-    }
-
-    saveAllState();
-    cancelEditQuestion();
-    populateCategoryDropdowns();
-    renderQuestionList();
-  }
-
-  function editQuestion(idx) {
-    const q = questions[idx];
-    document.getElementById("editSoalIndex").value = idx;
-    document.getElementById("formSoalTitle").textContent = "✏️ Edit Soal #" + (idx + 1);
-    document.getElementById("soalCategory").value = q.category;
-    document.getElementById("soalQuestion").value = q.question;
-    document.getElementById("optA").value = q.options[0];
-    document.getElementById("optB").value = q.options[1];
-    document.getElementById("optC").value = q.options[2];
-    document.getElementById("optD").value = q.options[3];
-    document.getElementById("soalAnswer").value = q.answer;
-    document.getElementById("btnCancelEdit").classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function cancelEditQuestion() {
-    document.getElementById("editSoalIndex").value = "-1";
-    document.getElementById("formSoalTitle").textContent = "+ Tambah / Edit Soal";
-    document.getElementById("soalQuestion").value = "";
-    document.getElementById("optA").value = "";
-    document.getElementById("optB").value = "";
-    document.getElementById("optC").value = "";
-    document.getElementById("optD").value = "";
-    document.getElementById("btnCancelEdit").classList.add("hidden");
-  }
-
-  function deleteQuestion(idx) {
-    if (!confirm("Hapus soal ini?")) return;
-    questions.splice(idx, 1);
-    saveAllState();
-    populateCategoryDropdowns();
-    renderQuestionList();
-  }
-
-  function deleteAllQuestions() {
-    if (!confirm("PERINGATAN: Semua soal dalam bank soal akan dihapus permanen. Lanjutkan?")) return;
-    questions = [];
-    saveAllState();
-    populateCategoryDropdowns();
-    renderQuestionList();
-  }
-
-  function restoreDefaultQuestions() {
-    if (!confirm("Pulihkan 50 soal PPKn Hari Pahlawan (25 Tahap 1 + 25 Tahap 2)?")) return;
-    questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
-    saveAllState();
-    populateCategoryDropdowns();
-    renderQuestionList();
-  }
-
-  function exportJSON() {
-    const blob = new Blob([JSON.stringify(questions, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "Bank_Soal_LCC_SMPN1Semanu.json";
-    a.click();
-  }
-
-  function importJSON(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (!Array.isArray(imported)) throw new Error("Format tidak valid");
-        questions = imported;
-        saveAllState();
-        populateCategoryDropdowns();
-        renderQuestionList();
-        alert(`Berhasil mengimpor ${imported.length} soal!`);
-      } catch (err) {
-        alert("File JSON tidak valid.");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function loadSettingsForm() {
-    const cats = getCategories();
-    const container = document.getElementById("stagePasswordSettings");
-    container.innerHTML = cats.map(c => `
-      <div class="form-group">
-        <label>Password untuk: <span style="color:var(--primary);">${c}</span></label>
-        <input type="text" class="stage-pass-input" data-cat="${c}" value="${stagePasswords[c] || ''}" placeholder="Kosongkan jika tanpa password" />
-      </div>
-    `).join("");
-
-    document.getElementById("settingSchoolName").value = settings.schoolName;
-    document.getElementById("settingQuizTitle").value = settings.quizTitle;
-    document.getElementById("settingAdminPin").value = settings.adminPin;
-  }
-
-  function saveStagePasswords() {
-    document.querySelectorAll(".stage-pass-input").forEach(inp => {
-      stagePasswords[inp.dataset.cat] = inp.value.trim();
-    });
-    saveAllState();
-    alert("Password setiap tahap berhasil disimpan!");
-  }
-
-  function uploadSchoolLogo(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      settings.logo = e.target.result;
-      saveAllState();
-      applyBranding();
-      alert("Logo sekolah berhasil diperbarui!");
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function saveGeneralSettings() {
-    settings.schoolName = document.getElementById("settingSchoolName").value.trim() || "SMP NEGERI 1 SEMANU";
-    settings.quizTitle = document.getElementById("settingQuizTitle").value.trim() || "Lomba Cerdas Cermat";
-    const newPin = document.getElementById("settingAdminPin").value.trim();
-    if (newPin) settings.adminPin = newPin;
-    saveAllState();
-    applyBranding();
-    alert("Pengaturan identitas sekolah dan PIN berhasil disimpan!");
-  }
-
-  applyBranding();
-  populateCategoryDropdowns();
-</script>
-</body>
-</html>
+    { category: STAGE_2, question: "Seorang siswa melihat temannya melakukan perundungan terhadap siswa lain. Jika menerapkan nilai kepahlawanan, tindakan terbaik adalah ....", options: ["Membi
