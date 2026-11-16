@@ -617,38 +617,7 @@
     }
   }
 
-  function finishQuiz() {
-    const unanswered = activeQuiz.answers.filter(a => a === null).length;
-    if (unanswered > 0 && !confirm(`Masih ada ${unanswered} soal belum dijawab. Yakin ingin mengirim jawaban?`)) return;
-
-    let correct = 0;
-    activeQuiz.items.forEach((q, idx) => {
-      if (activeQuiz.answers[idx] === q.answer) correct++;
-    });
-
-    const total = activeQuiz.items.length;
-    const score = Math.round((correct / total) * 100);
-
-    leaderboard.push({
-      id: Date.now(),
-      kelas: activeQuiz.kelas,
-      namaRegu: activeQuiz.namaRegu,
-      tahap: activeQuiz.tahap,
-      benar: correct,
-      total: total,
-      skor: score,
-      waktu: new Date().toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' })
-    });
-    saveAllState();
-
-    document.getElementById("viewQuiz").classList.add("hidden");
-    document.getElementById("viewResult").classList.remove("hidden");
-    document.getElementById("resReguInfo").textContent = `Kelas ${activeQuiz.kelas} (${activeQuiz.namaRegu}) — ${activeQuiz.tahap}`;
-    document.getElementById("resScore").textContent = score;
-    document.getElementById("resDetail").textContent = `Benar: ${correct} dari ${total} soal | Salah: ${total - correct}`;
-  }
-
-  function finishQuiz() {
+    function finishQuiz() {
     const unanswered = activeQuiz.answers.filter(a => a === null).length;
     if (unanswered > 0 && !confirm(`Masih ada ${unanswered} soal belum dijawab. Yakin ingin mengirim jawaban?`)) return;
 
